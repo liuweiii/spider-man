@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>spider man</title>
+    <script src="/static/vis.js"></script>
+</head>
+<body>
+<div id="mynetwork" style="width:1000px;height:1200px"></div>
+<script>
+
+  // create an array with nodes
+
+{#  var nodes = new vis.DataSet({{ points |safe}});#}
+  var nodes = new vis.DataSet([
+      {% for point in points %}
+          { id: {{ point["id"] }}, label: "{{ point["label"] }}"
+              {% if point["id"] == 0 %}
+                  ,color: "#FF0000"
+          {% endif %}
+          },
+      {% endfor %}
+  ]);
+
+  // create an array with edges
+  var edges = new vis.DataSet({{ edges |safe}});
+
+  // create a network
+  var container = document.getElementById('mynetwork');
+  var data = {
+    nodes: nodes,
+    edges: edges
+  };
+  var options = {};
+  var network = new vis.Network(container, data, options);
+
+</script>
+</body>
+</html>

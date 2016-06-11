@@ -1,0 +1,4 @@
+.idea/*
+.tox/*
+spider-man.egg-info/*
+*.pyc
