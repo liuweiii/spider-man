@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import zmq, time
 from url_manager import UrlManager
 from download_manager import DownloadManager
 from parser_manager import ParserManager
@@ -8,22 +9,29 @@ from spider_man.node import DataNode, UrlNode
 
 
 class SpiderMan(object):
-    def __init__(self, root_url, prefix, url_keys, content_keys):
+    def __init__(self, prefix,root_url):
         self.url_manager = UrlManager(root_url, prefix)
-        self.download_manager = DownloadManager()
-        self.parser_manager = ParserManager(url_keys, content_keys)
         self.output_manager = OutputManager()
 
-    def crawl(self, total):
-        count = 0
-        while self.url_manager.has_url_node() and count <= total:
-            count += 1
-            url_node = self.url_manager.get_url_node()
-            try:
-                content = self.download_manager.download(url_node.url)
-            except Exception as e:
-                continue
-            new_urls, new_data = self.parser_manager.parse(content)
+    def start_push(self):
+        context = zmq.Context()
+        sender = context.socket(zmq.PUSH)
+        sender.bind("tcp://*:15677")
+
+        while True:
+            if self.url_manager.has_url_node():
+                url_node = self.url_manager.get_url_node()
+                print "has url:[" + str(url_node)
+                sender.send_pyobj(url_node)
+            time.sleep(1)
+
+    def start_pull(self):
+        context = zmq.Context()
+        receiver = context.socket(zmq.PULL)
+        receiver.connect("tcp://localhost:15678")
+        while True:
+            s = receiver.recv_pyobj()
+            new_urls, new_data, url_node = s[0], s[1], s[2]
             if len(new_data) >= 1:
                 current = DataNode(url_node, new_data)
                 self.output_manager.add(current)
@@ -31,4 +39,6 @@ class SpiderMan(object):
                 print "[" + str(url_node.parent_id) + "-->" + str(url_node.id) + "]" + new_data[0].string
             else:
                 print "[" + str(url_node.parent_id) + "-->" + str(url_node.id) + "]" + "--"
+
+    def get_points_and_edges(self):
         return self.output_manager.points_and_edges()

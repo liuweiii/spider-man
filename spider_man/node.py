@@ -7,6 +7,9 @@ class UrlNode(object):
     def __eq__(self, other):
         return self.url == other.url
 
+    def __str__(self):
+        return "["+str(self.parent_id)+"-->"+str(self.id)+"]"+self.url
+
 
 class DataNode(object):
     def __init__(self, url_node, current_data):

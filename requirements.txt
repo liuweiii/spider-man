@@ -9,3 +9,5 @@ flask
 pytest >= 2.8.4
 testtools >= 1.4.0
 flake8 >= 2.2.0
+PyZMQ >= 13.0
+threadpool
