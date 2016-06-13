@@ -20,6 +20,7 @@ class DownloadManager(object):
                 s = response.read()
                 links, data = ParserManager.parse(s, url_keys, context_keys)
                 sender_url.send_pyobj((links, data, url_node))
+                return links, data
         except Exception as e:
             print e
 
@@ -32,7 +33,6 @@ class DownloadManager(object):
         receiver.connect("tcp://localhost:15677")
         while True:
             url_node = receiver.recv_pyobj()
-            print "[dm from sm] receive: " + str(url_node)
             requests = threadpool.makeRequests(DownloadManager.download,
                                                [{
                                                    "url_node": url_node,
@@ -41,5 +41,4 @@ class DownloadManager(object):
                                                }]
                                                )
             pool.putRequest(requests[0])
-            # [pool.putRequest(request) for request in requests]
             pool.wait()

@@ -20,8 +20,8 @@ class TestUrlManager(unittest2.TestCase):
 
     def test__add_urls_if_give_2(self):
         um = UrlManager("111", "xxx")
-        um.add_urls(1, (Tag(name="a",attrs={'href':'222'}),
-                        Tag(name="a", attrs={'href':'333'})))
+        um.add_urls(1, (Tag(name="a", attrs={'href': '222'}),
+                        Tag(name="a", attrs={'href': '333'})))
         self.assertEqual(um.get_url_node().url, "111")
         self.assertEqual(um.get_url_node().url, "xxx222")
         self.assertEqual(um.get_url_node().url, "xxx333")

@@ -5,8 +5,7 @@ from spider_man.parser_manager import ParserManager
 
 class TestParserManager(unittest2.TestCase):
     def test__parse(self):
-        pm = ParserManager(r"/view/*", ".main-content dl dd h1")
-        urls, data = pm.parse("""
+        urls, data = ParserManager.parse("""
          <!DOCTYPE html>
 <!--STATUS OK-->
 <html>
@@ -42,6 +41,6 @@ class TestParserManager(unittest2.TestCase):
 </div>
 </body>
 </html>
-""")
+""",r"/view/*", ".main-content dl dd h1")
         self.assertEqual(len(urls), 1)
         self.assertEqual(data[0].string, u"动态语言")

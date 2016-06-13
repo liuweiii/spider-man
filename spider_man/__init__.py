@@ -21,7 +21,6 @@ class SpiderMan(object):
         while True:
             if self.url_manager.has_url_node():
                 url_node = self.url_manager.get_url_node()
-                print "has url:[" + str(url_node)
                 sender.send_pyobj(url_node)
             time.sleep(1)
 
