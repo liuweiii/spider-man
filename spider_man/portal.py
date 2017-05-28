@@ -6,7 +6,8 @@ import thread
 
 app = Flask(__name__)
 
-sm = SpiderMan("http://baike.baidu.com","http://baike.baidu.com/view/1458275.htm")
+# sm = SpiderMan("http://baike.baidu.com","http://baike.baidu.com/view/1458275.htm")
+sm = SpiderMan("http://baike.baidu.com","http://baike.baidu.com/item/动态语言")
 
 
 @app.route("/crawl")
@@ -23,7 +24,7 @@ def start():
     thread.start_new_thread(sm.start_pull, ())
 
     print "starting DownloadManager ..."
-    thread.start_new_thread(DownloadManager.start_work, (r"/view/\d+\.htm",
-                   ".main-content dl dd h1"))
+    # thread.start_new_thread(DownloadManager.start_work, (r"/view/\d+\.htm", ".main-content dl dd h1"))
+    thread.start_new_thread(DownloadManager.start_work, (r"/item/*", ".main-content dl dd h1"))
     return "started ..."
     #
